@@ -5,6 +5,8 @@ def main():
     program_intro()
     settings = input_output_settings()
     output_coords = converter(settings)
+    filename = output_csv_writer(output_coords)
+    program_outro(settings, filename)
 
 def program_intro():
     print("CBA's COORDINATES CONVERTER - PYTHON3")
@@ -67,33 +69,6 @@ def output_coord_format(output_system):
             else:
                 print("Invalid input. Please try again...")
 
-def converter(settings):
-    EPSG_codes = {
-        "prs92,deg":"EPSG:4683",
-        "prs92,z1":"EPSG:3121",
-        "prs92,z2":"EPSG:3122",
-        "prs92,z3":"EPSG:3123",
-        "prs92,z4":"EPSG:3124",
-        "prs92,z5":"EPSG:3125",
-        "wgs84,deg":"EPSG:4326",
-        "wgs84,50n":"EPSG:32650",
-        "wgs84,51n":"EPSG:32651"
-    }
-    input_settings = ",".join(settings[0])
-    output_settings = ",".join(settings[1])
-    transformer = Transformer.from_crs(EPSG_codes.get(input_settings), EPSG_codes.get(output_settings), always_xy=True)
-    input_coords = csv_file_checker()
-    input_x = []
-    input_y = []
-    for i, xy in enumerate(input_coords):
-        input_x.append(input_coords[i][0])
-        input_y.append(input_coords[i][1])
-    output_coords = []
-    for n in range(len(input_coords)):
-        output_coord = transformer.transform(input_x[n], input_y[n])
-        output_coords.append(output_coord)
-    return output_coords
-
 def csv_file_checker():
     while True:
         try:
@@ -119,6 +94,49 @@ def csv_file_checker():
                     print("Invalid input. Please try again...")
         except ValueError as e:
             print(e)
+
+def converter(settings):
+    EPSG_codes = {
+        "prs92,deg":"EPSG:4683",
+        "prs92,z1":"EPSG:3121",
+        "prs92,z2":"EPSG:3122",
+        "prs92,z3":"EPSG:3123",
+        "prs92,z4":"EPSG:3124",
+        "prs92,z5":"EPSG:3125",
+        "wgs84,deg":"EPSG:4326",
+        "wgs84,50n":"EPSG:32650",
+        "wgs84,51n":"EPSG:32651"
+    }
+    input_settings = ",".join(settings[0])
+    output_settings = ",".join(settings[1])
+    pyproj_transformer = Transformer.from_crs(EPSG_codes.get(input_settings), EPSG_codes.get(output_settings), always_xy=True)
+    input_coords = csv_file_checker()
+    input_x = []
+    input_y = []
+    for i, xy in enumerate(input_coords):
+        input_x.append(input_coords[i][0])
+        input_y.append(input_coords[i][1])
+    output_coords = []
+    for n in range(len(input_coords)):
+        output_coord = pyproj_transformer.transform(input_x[n], input_y[n])
+        output_coords.append(output_coord)
+    return output_coords
+
+def output_csv_writer(output_coords):
+    filename = input("Please input a filename for the output CSV file: ")
+    if not filename.endswith(".csv") and not filename.endswith(".CSV"):
+        filename = f"{filename}.csv"
+    with open(filename, "w", newline="") as file:
+        writer = csv.writer(file)
+        for xy in output_coords:
+            writer.writerow(xy)
+    return filename
+
+def program_outro(settings, filename):
+    print(f"\nConversion from {settings[0][0].upper()} {settings[0][1].upper()} to {settings[1][0].upper()} {settings[1][1].upper()} completed.")
+    print(f'Please check the output CSV file "{filename}" and validate the converted coordinates.')
+    sys.exit("Exiting program. Press Enter to exit...")
+    input()
 
 if __name__ == "__main__":
     main()

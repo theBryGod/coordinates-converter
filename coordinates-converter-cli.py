@@ -3,8 +3,8 @@ from pyproj import Transformer
 
 def main():
     program_intro()
-    input_output_settings()
-    csv_file_checker()
+    settings = input_output_settings()
+    output_coords = converter(settings)
 
 def program_intro():
     print("CBA's COORDINATES CONVERTER - PYTHON3")
@@ -55,15 +55,44 @@ def output_coord_format(output_system):
         if output_system == "prs92":
             output_coord_format_prompt = input("Converting to PRS92 DEGREES, ZONE 1, ZONE 2, ZONE 3, ZONE 4, or ZONE 5? (DEG/Z1/Z2/Z3/Z4/Z5): ").casefold()
             if output_coord_format_prompt in ["deg", "z1", "z2", "z3", "z4", "z5"]:
+                print("\n", end="")
                 return output_coord_format_prompt
             else:
                 print("Invalid input. Please try again...")
         elif output_system == "wgs84":
             output_coord_format_prompt = input("Converting to WGS84 DEGREES or UTM ZONE 50N/51N? (DEG/50N/51N): ").casefold()
             if output_coord_format_prompt in ["deg", "50n", "51n"]:
+                print("\n", end="")
                 return output_coord_format_prompt
             else:
                 print("Invalid input. Please try again...")
+
+def converter(settings):
+    EPSG_codes = {
+        "prs92,deg":"EPSG:4683",
+        "prs92,z1":"EPSG:3121",
+        "prs92,z2":"EPSG:3122",
+        "prs92,z3":"EPSG:3123",
+        "prs92,z4":"EPSG:3124",
+        "prs92,z5":"EPSG:3125",
+        "wgs84,deg":"EPSG:4326",
+        "wgs84,50n":"EPSG:32650",
+        "wgs84,51n":"EPSG:32651"
+    }
+    input_settings = ",".join(settings[0])
+    output_settings = ",".join(settings[1])
+    transformer = Transformer.from_crs(EPSG_codes.get(input_settings), EPSG_codes.get(output_settings), always_xy=True)
+    input_coords = csv_file_checker()
+    input_x = []
+    input_y = []
+    for i, xy in enumerate(input_coords):
+        input_x.append(input_coords[i][0])
+        input_y.append(input_coords[i][1])
+    output_coords = []
+    for n in range(len(input_coords)):
+        output_coord = transformer.transform(input_x[n], input_y[n])
+        output_coords.append(output_coord)
+    return output_coords
 
 def csv_file_checker():
     while True:
@@ -84,7 +113,8 @@ def csv_file_checker():
                     if fnf_prompt == "y":
                         return csv_file_checker()
                     else:
-                        sys.exit("Exiting program. Press Enter to exit...")
+                        sys.exit("Exiting program...")
+                        input()
                 else:
                     print("Invalid input. Please try again...")
         except ValueError as e:

@@ -4,6 +4,7 @@ from pyproj import Transformer
 def main():
     program_intro()
     input_output_settings()
+    csv_file_checker()
 
 def program_intro():
     print("CBA's COORDINATES CONVERTER - PYTHON3")
@@ -63,6 +64,31 @@ def output_coord_format(output_system):
                 return output_coord_format_prompt
             else:
                 print("Invalid input. Please try again...")
+
+def csv_file_checker():
+    while True:
+        try:
+            filename = input("Please input the filename of the CSV containing the coordinates: ")
+            if not filename.endswith(".csv"):
+                raise ValueError("Invalid input. Please try again...")
+            input_coordinates = []
+            with open(filename, "r") as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    input_coordinates.append(row)
+            return input_coordinates
+        except FileNotFoundError:
+            while True:
+                fnf_prompt = input("File not found. Please make sure that the CSV file is in the same folder as the program. Try again? (Y/N): ").casefold()
+                if fnf_prompt in ["y", "n"]:
+                    if fnf_prompt == "y":
+                        return csv_file_checker()
+                    else:
+                        sys.exit("Exiting program. Press Enter to exit...")
+                else:
+                    print("Invalid input. Please try again...")
+        except ValueError as e:
+            print(e)
 
 if __name__ == "__main__":
     main()

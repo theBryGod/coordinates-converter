@@ -1,4 +1,7 @@
-import sys, csv
+import sys
+import csv
+import os
+from os.path import abspath, dirname
 from pyproj import Transformer
 
 def main():
@@ -9,6 +12,7 @@ def main():
     program_outro(settings, filename)
 
 def program_intro():
+    os.chdir(dirname(abspath(__file__)))
     print("CBA's COORDINATES CONVERTER - PYTHON3")
     print("CONVERTS PRS92 COORDINATES TO WGS84 (AND VICE VERSA) - PLEASE SEE THE README FOR USER INSTRUCTIONS.\n")
 
@@ -88,8 +92,8 @@ def csv_file_checker():
                     if fnf_prompt == "y":
                         return csv_file_checker()
                     else:
-                        sys.exit("Exiting program...")
-                        input()
+                        press_enter = input("Exiting program...")
+                        sys.exit()
                 else:
                     print("Invalid input. Please try again...")
         except ValueError as e:
@@ -135,8 +139,8 @@ def output_csv_writer(output_coords):
 def program_outro(settings, filename):
     print(f"\nConversion from {settings[0][0].upper()} {settings[0][1].upper()} to {settings[1][0].upper()} {settings[1][1].upper()} completed.")
     print(f'Please check the output CSV file "{filename}" and validate the converted coordinates.')
-    sys.exit("Exiting program. Press Enter to exit...")
-    input()
+    press_enter = input("Exiting program. Press Enter to exit...")
+    sys.exit()
 
 if __name__ == "__main__":
     main()

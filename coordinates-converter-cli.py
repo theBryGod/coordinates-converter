@@ -14,8 +14,7 @@ def input_output_settings():
     input_format = input_coord_format(input_system)
     output_system = output_coord_system()
     output_format = output_coord_format(output_system)
-    print(input_system, input_format)
-    print(output_system, output_format)
+    return [(input_system, input_format), (output_system, output_format)]
 
 def input_coord_system():
     while True:

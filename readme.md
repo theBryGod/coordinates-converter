@@ -40,7 +40,7 @@ As of the current release, the CSV file must then be placed in the same director
 
 ## Download
 
-You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest version of the application from the releases page.
+You can [download](https://github.com/theBryGod/coordinates-converter/releases) the latest version of the application from the releases page.
 
 
 ## Credits

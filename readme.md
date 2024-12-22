@@ -51,6 +51,7 @@ This application uses the following programming languages and packages:
 * [pyproj - Python interface to PROJ (cartographic projections and coordinate transformations library)](https://pyproj4.github.io/pyproj/stable/)
 * [PyInstaller - Bundles a Python application and all its dependencies into a single package](https://pyinstaller.org/en/stable/)
 
+Special thanks to [amitmerchant1990](https://github.com/amitmerchant1990), as I used his README file as a template for my own.
 ## License
 
 MIT

@@ -118,12 +118,22 @@ def converter(settings):
     input_x = []
     input_y = []
     for i, xy in enumerate(input_coords):
-        input_x.append(input_coords[i][0])
-        input_y.append(input_coords[i][1])
+        try:
+            input_x.append(input_coords[i][0])
+            input_y.append(input_coords[i][1])
+        except IndexError:
+            print("Invalid input coordinates. Please see the README for user instructions regarding the input CSV file.")
+            press_enter = input("Exiting program. Press Enter to exit...")
+            sys.exit()
     output_coords = []
     for n in range(len(input_coords)):
-        output_coord = pyproj_transformer.transform(input_x[n], input_y[n])
-        output_coords.append(output_coord)
+        try:
+            output_coord = pyproj_transformer.transform(input_x[n], input_y[n])
+            output_coords.append(output_coord)
+        except TypeError:
+            print("Invalid input coordinates. Please see the README for user instructions regarding the input CSV file.")
+            press_enter = input("Exiting program. Press Enter to exit...")
+            sys.exit()
     return output_coords
 
 def output_csv_writer(output_coords):

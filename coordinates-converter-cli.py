@@ -12,7 +12,7 @@ def main():
     program_outro(settings, filename)
 
 def program_intro():
-    os.chdir(dirname(abspath(__file__)))
+    os.chdir(dirname(abspath(sys.argv[0])))
     print("CBA's COORDINATES CONVERTER - PYTHON3")
     print("CONVERTS PRS92 COORDINATES TO WGS84 (AND VICE VERSA) - PLEASE SEE THE README FOR USER INSTRUCTIONS.\n")
 

@@ -76,7 +76,7 @@ def output_coord_format(output_system):
 def csv_file_checker():
     while True:
         try:
-            filename = input("Please input the filename of the CSV containing the coordinates: ")
+            filename = input("Please input the filename of the CSV containing the coordinates (sample_file.csv): ")
             if not filename.endswith(".csv"):
                 raise ValueError("Invalid input. Please try again...")
             input_coordinates = []

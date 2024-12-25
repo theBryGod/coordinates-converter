@@ -9,16 +9,36 @@ os.chdir(dirname(abspath(sys.argv[0])))
 
 # app functionality
 def change_input_menu_wgs84():
-    pass
+    var_mb_input_format.set("")
+    var_input_menu_options = ttk.Menu(mb_input_format)
+    options = ["WGS84 Degrees", "WGS84 50N", "WGS84 51N"]
+    for option in options:
+        var_input_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_input_format.set(x))
+    mb_input_format["menu"] = var_input_menu_options
 
 def change_input_menu_prs92():
-    pass
+    var_mb_input_format.set("")
+    var_input_menu_options = ttk.Menu(mb_input_format)
+    options = ["PRS92 Degrees", "PRS92 Zone 1", "PRS92 Zone 2", "PRS92 Zone 3", "PRS92 Zone 4", "PRS92 Zone 5"]
+    for option in options:
+        var_input_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_input_format.set(x))
+    mb_input_format["menu"] = var_input_menu_options
 
 def change_output_menu_wgs84():
-    pass
+    var_mb_output_format.set("")
+    var_output_menu_options = ttk.Menu(mb_output_format)
+    options = ["WGS84 Degrees", "WGS84 50N", "WGS84 51N"]
+    for option in options:
+        var_output_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_output_format.set(x))
+    mb_output_format["menu"] = var_output_menu_options
 
 def change_output_menu_prs92():
-    pass
+    var_mb_output_format.set("")
+    var_output_menu_options = ttk.Menu(mb_output_format)
+    options = ["PRS92 Degrees", "PRS92 Zone 1", "PRS92 Zone 2", "PRS92 Zone 3", "PRS92 Zone 4", "PRS92 Zone 5"]
+    for option in options:
+        var_output_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_output_format.set(x))
+    mb_output_format["menu"] = var_output_menu_options
 
 # app geometry
 root = ttk.Window(title="CBA's Coordinates Converter", themename="darkly")

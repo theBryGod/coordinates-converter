@@ -2,8 +2,10 @@ import tkinter as tk
 import ttkbootstrap as ttk
 import os
 import sys
+import csv
 from os.path import dirname, abspath
 from tkinter import filedialog
+from pyproj import Transformer
 
 # cwd to .exe directory
 os.chdir(dirname(abspath(sys.argv[0])))
@@ -58,7 +60,35 @@ def open_file():
         return target
     
 def convert():
-    pass
+    input_coordinates = []
+    with open(var_filename.get(), "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            input_coordinates.append(row)
+    EPSG_codes = {
+        "prs92,deg":"EPSG:4683",
+        "prs92,z1":"EPSG:3121",
+        "prs92,z2":"EPSG:3122",
+        "prs92,z3":"EPSG:3123",
+        "prs92,z4":"EPSG:3124",
+        "prs92,z5":"EPSG:3125",
+        "wgs84,deg":"EPSG:4326",
+        "wgs84,50n":"EPSG:32650",
+        "wgs84,51n":"EPSG:32651"
+    }
+    dict_input_output_settings = {
+        "WGS84 Degrees":"wgs84,deg",
+        "WGS84 50N":"wgs84,50n",
+        "WGS84 51N":"wgs84,51n",
+        "PRS92 Degrees":"prs92,deg",
+        "PRS92 Zone 1":"prs92,z1",
+        "PRS92 Zone 2":"prs92,z2",
+        "PRS92 Zone 3":"prs92,z3",
+        "PRS92 Zone 4":"prs92,z4",
+        "PRS92 Zone 5":"prs92,z5"
+    }
+    input_settings = dict_input_output_settings.get(var_mb_input_format.get())
+    output_settings = dict_input_output_settings.get(var_mb_output_format.get())
 
 # app geometry
 root = ttk.Window(title="CBA's Coordinates Converter", themename="darkly")

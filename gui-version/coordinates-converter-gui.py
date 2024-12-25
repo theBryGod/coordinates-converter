@@ -3,6 +3,7 @@ import ttkbootstrap as ttk
 import os
 import sys
 from os.path import dirname, abspath
+from tkinter import filedialog
 
 # cwd to .exe directory
 os.chdir(dirname(abspath(sys.argv[0])))
@@ -40,11 +41,30 @@ def change_output_menu_prs92():
         var_output_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_output_format.set(x))
     mb_output_format["menu"] = var_output_menu_options
 
+def open_file():
+    target = filedialog.askopenfilename()
+    var_filename.set(target)
+    if not target:
+        var_status.set("")
+    elif not target.endswith(".csv"):
+        ent_status.configure(foreground="#FF3600")
+        var_status.set("Invalid file type. Please select a CSV file.")
+        btn_convert.configure(state="disabled")
+        target = None
+    else:
+        ent_status.configure(foreground="#22DD22")
+        var_status.set("CSV file selected. Press the button to start the conversion.")
+        btn_convert.configure(state="enabled")
+        return target
+    
+def convert():
+    pass
+
 # app geometry
 root = ttk.Window(title="CBA's Coordinates Converter", themename="darkly")
 root.iconbitmap("converter-icon.ico")
-root_width = 425
-root_height = 400
+root_width = 570
+root_height = 320
 root.geometry(f"{root_width}x{root_height}")
 root.minsize(root_width, root_height)
 root.maxsize(root_width, root_height)
@@ -108,6 +128,26 @@ rdbtn_output_system_prs92.pack(padx=5, pady=2, anchor="w")
 lbl_menu_output_format_desc = ttk.Label(master=frm_output_settings, text="Output coordinates format:")
 lbl_menu_output_format_desc.pack()
 mb_output_format.pack(pady=5)
+
+# File picker
+frm_file = ttk.Frame(root)
+frm_file.pack(pady=10)
+lbl_filename = ttk.Label(frm_file, text="File:")
+lbl_filename.pack(side="left")
+var_filename = ttk.StringVar() 
+ent_filename = ttk.Entry(frm_file, textvariable = var_filename, state="disabled", width=48, justify="center", foreground="white")
+ent_filename.pack(side="left", padx=10)
+btn_filename = ttk.Button(frm_file, text="Select file...", command=open_file)
+btn_filename.pack()
+btn_convert = ttk.Button(root, text="Convert", state="disabled", command=convert)
+btn_convert.pack()
+frm_status = ttk.Frame(root)
+frm_status.pack(pady=10)
+lbl_status = ttk.Label(frm_status, text="Status:")
+lbl_status.pack(side="left")
+var_status = ttk.StringVar()
+ent_status = ttk.Entry(frm_status, textvariable=var_status, state="disabled", width=48, justify="center")
+ent_status.pack(padx=5)
 
 # app mainloop
 root.mainloop()

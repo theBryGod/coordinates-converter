@@ -13,8 +13,7 @@
   <a href="#features">Features</a> •
   <a href="#user-instructions">User Instructions</a> •
   <a href="#download">Download</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#license">License</a>
+  <a href="#credits">Credits</a>
 </p>
 
 ## Features
@@ -57,8 +56,4 @@ This application uses the following programming languages and packages:
 * [Tkinter - The standard GUI (Graphical User Interface) library for Python](https://docs.python.org/3/library/tkinter.html)
 * [ttkbootstrap - Tkinter theme extension with added functionalities and modern styling](https://github.com/israel-dryer/ttkbootstrap/)
 
-Special thanks to [amitmerchant1990](https://github.com/amitmerchant1990), as I used his README file as the template for my own.
-## License
-
-MIT
 

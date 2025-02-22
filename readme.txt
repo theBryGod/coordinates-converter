@@ -19,6 +19,3 @@ CBA's COORDINATES CONVERTER
     >   PyInstaller - Bundles a Python application and all its dependencies into a single package
     >   Tkinter - The standard GUI (Graphical User Interface) library for Python
     >   ttkbootstrap - Tkinter theme extension with added functionalities and modern styling
-
-* LICENSE
--   MIT

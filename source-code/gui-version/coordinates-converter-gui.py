@@ -11,34 +11,26 @@ from pyproj import Transformer
 os.chdir(dirname(abspath(sys.argv[0])))
 
 # app functionality
-def change_input_menu_wgs84():
+def change_input_menu():
     var_mb_input_format.set("")
     var_input_menu_options = ttk.Menu(mb_input_format)
-    options = ["WGS84 Degrees", "WGS84 50N", "WGS84 51N"]
+    selected = var_input_system.get()
+    if selected == "wgs84":
+        options = ["WGS84 Degrees", "WGS84 50N", "WGS84 51N"]
+    elif selected == "prs92":
+        options = ["PRS92 Degrees", "PRS92 Zone 1", "PRS92 Zone 2", "PRS92 Zone 3", "PRS92 Zone 4", "PRS92 Zone 5"]
     for option in options:
         var_input_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_input_format.set(x))
     mb_input_format["menu"] = var_input_menu_options
 
-def change_input_menu_prs92():
-    var_mb_input_format.set("")
-    var_input_menu_options = ttk.Menu(mb_input_format)
-    options = ["PRS92 Degrees", "PRS92 Zone 1", "PRS92 Zone 2", "PRS92 Zone 3", "PRS92 Zone 4", "PRS92 Zone 5"]
-    for option in options:
-        var_input_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_input_format.set(x))
-    mb_input_format["menu"] = var_input_menu_options
-
-def change_output_menu_wgs84():
+def change_output_menu():
     var_mb_output_format.set("")
     var_output_menu_options = ttk.Menu(mb_output_format)
-    options = ["WGS84 Degrees", "WGS84 50N", "WGS84 51N"]
-    for option in options:
-        var_output_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_output_format.set(x))
-    mb_output_format["menu"] = var_output_menu_options
-
-def change_output_menu_prs92():
-    var_mb_output_format.set("")
-    var_output_menu_options = ttk.Menu(mb_output_format)
-    options = ["PRS92 Degrees", "PRS92 Zone 1", "PRS92 Zone 2", "PRS92 Zone 3", "PRS92 Zone 4", "PRS92 Zone 5"]
+    selected = var_output_system.get()
+    if selected == "wgs84":
+        options = ["WGS84 Degrees", "WGS84 50N", "WGS84 51N"]
+    elif selected == "prs92":
+        options = ["PRS92 Degrees", "PRS92 Zone 1", "PRS92 Zone 2", "PRS92 Zone 3", "PRS92 Zone 4", "PRS92 Zone 5"]
     for option in options:
         var_output_menu_options.add_radiobutton(label=option, command=lambda x=option: var_mb_output_format.set(x))
     mb_output_format["menu"] = var_output_menu_options
@@ -149,13 +141,13 @@ rdbtn_input_system_wgs84 = ttk.Radiobutton(master=lblfrm_input_system,
                                            text="WGS84",
                                            variable=var_input_system,
                                            value="wgs84",
-                                           command=change_input_menu_wgs84)
+                                           command=change_input_menu)
 rdbtn_input_system_wgs84.pack(padx=5, pady=(2, 0), anchor="w")
 rdbtn_input_system_prs92 = ttk.Radiobutton(master=lblfrm_input_system,
                                            text="PRS92",
                                            variable=var_input_system,
                                            value="prs92",
-                                           command=change_input_menu_prs92)
+                                           command=change_input_menu)
 rdbtn_input_system_prs92.pack(padx=5, pady=2, anchor="w")
 lbl_menu_input_format_desc = ttk.Label(master=frm_input_settings, text="Input coordinates format:")
 lbl_menu_input_format_desc.pack()
@@ -173,13 +165,13 @@ rdbtn_output_system_wgs84 = ttk.Radiobutton(master=lblfrm_output_system,
                                            text="WGS84",
                                            variable=var_output_system,
                                            value="wgs84",
-                                           command=change_output_menu_wgs84)
+                                           command=change_output_menu)
 rdbtn_output_system_wgs84.pack(padx=5, pady=(2, 0), anchor="w")
 rdbtn_output_system_prs92 = ttk.Radiobutton(master=lblfrm_output_system,
                                            text="PRS92",
                                            variable=var_output_system,
                                            value="prs92",
-                                           command=change_output_menu_prs92)
+                                           command=change_output_menu)
 rdbtn_output_system_prs92.pack(padx=5, pady=2, anchor="w")
 lbl_menu_output_format_desc = ttk.Label(master=frm_output_settings, text="Output coordinates format:")
 lbl_menu_output_format_desc.pack()

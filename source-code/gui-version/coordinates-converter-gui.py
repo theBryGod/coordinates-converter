@@ -1,8 +1,8 @@
-import tkinter as tk
-import ttkbootstrap as ttk
 import os
 import sys
-import csv
+import tkinter as tk
+import ttkbootstrap as ttk
+import pandas as pd
 from os.path import dirname, abspath
 from tkinter import filedialog
 from pyproj import Transformer
@@ -50,13 +50,8 @@ def open_file():
         var_status.set("CSV file selected. Press the button to start the conversion.")
         btn_convert.configure(state="enabled")
         return target
-    
+
 def convert():
-    input_coordinates = []
-    with open(var_filename.get(), "r") as file:
-        reader = csv.reader(file)
-        for row in reader:
-            input_coordinates.append(row)
     EPSG_codes = {
         "prs92,deg":"EPSG:4683",
         "prs92,z1":"EPSG:3121",
@@ -82,32 +77,23 @@ def convert():
     input_settings = dict_input_output_settings.get(var_mb_input_format.get())
     output_settings = dict_input_output_settings.get(var_mb_output_format.get())
     pyproj_transformer = Transformer.from_crs(EPSG_codes.get(input_settings), EPSG_codes.get(output_settings), always_xy=True)
-    input_x = []
-    input_y = []
-    for i, xy in enumerate(input_coordinates):
-        try:
-            input_x.append(input_coordinates[i][0])
-            input_y.append(input_coordinates[i][1])
-        except IndexError:
-            ent_status.configure(foreground="#FF3600")
-            var_status.set("Invalid input coordinates. Please try again...")
-            return
-    output_coords = []
-    for n in range(len(input_coordinates)):
-        try:
-            output_coord = pyproj_transformer.transform(input_x[n], input_y[n])
-            output_coords.append(output_coord)
-        except TypeError:
-            ent_status.configure(foreground="#FF3600")
-            var_status.set("Invalid input coordinates. Please recheck the input CSV file and try again.")
-            return
-    with open(f"{var_filename.get()} -to- {var_mb_output_format.get()}.csv", "w", newline="") as file:
-        writer = csv.writer(file)
-        for xy in output_coords:
-            writer.writerow(xy)
+    input_coordinates = pd.read_csv(var_filename.get(), header=None)
+    try:
+        for index, row in input_coordinates.iterrows():
+            if input_coordinates.shape[1] != 2 or row.isnull().any():
+                raise ValueError
+        input_coordinates.columns = ["X", "Y"]
+        input_coordinates["X"], input_coordinates["Y"] = zip(*input_coordinates.apply(
+            lambda row: pyproj_transformer.transform(row["X"], row["Y"]), axis=1))
+    except (TypeError, ValueError):
+        ent_status.configure(foreground="#FF3600")
+        var_status.set("Invalid input coordinates. Please recheck the input CSV file and try again.")
+        return
+    output_coordinates = input_coordinates[["X", "Y"]]
+    output_coordinates.to_csv(f"{var_filename.get()} to {var_mb_output_format.get()}.csv", header=None, index=None)
     ent_status.configure(foreground="#22DD22")
     var_status.set(f"Conversion from {var_mb_input_format.get()} to {var_mb_output_format.get()} completed.")
-    
+  
 # app geometry
 root = ttk.Window(title="CBA's Coordinates Converter", themename="darkly")
 root.iconbitmap("converter-icon.ico")
